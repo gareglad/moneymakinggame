@@ -35,7 +35,7 @@
     .col-md-4 {
         margin-bottom: 10px;
     }
-    .disable-dbl-tap-zoom {
+    .disable-dbl-tap-zoom, button {
       touch-action: manipulation;
     }
 
@@ -72,6 +72,22 @@
         purchased: false,
         quantity: 0,
       },
+      {
+        id: 4,
+        name: "Ruby",
+        value: 200,
+        cost: 5000,
+        purchased: false,
+        quantity: 0,
+      },
+      {
+        id: 5,
+        name: "Pearl",
+        value: 200,
+        cost: 10000,
+        purchased: false,
+        quantity: 0,
+      }
     ];
 
 
@@ -302,6 +318,28 @@
         >
           <span class="itemName">Diamond</span>
           <span class="itemCost">$1000</span>
+          <span class="itemQuantity">0</span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button
+          class="treasureButton btn btn-info btn-block"
+          data-id="4"
+          onclick="buyTreasure(4)"
+        >
+          <span class="itemName">Ruby</span>
+          <span class="itemCost">$5000</span>
+          <span class="itemQuantity">0</span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button
+          class="treasureButton btn btn-info btn-block"
+          data-id="5"
+          onclick="buyTreasure(5)"
+        >
+          <span class="itemName">Pearl</span>
+          <span class="itemCost">$10000</span>
           <span class="itemQuantity">0</span>
         </button>
       </div>
