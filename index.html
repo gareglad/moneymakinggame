@@ -49,7 +49,6 @@
     let autoClickerInterval; // Variable to store the interval for auto-clicking
 
     function autoClick() {
-      updateMoney();
       work(); // Call the work function to increase money
     }
 
@@ -175,7 +174,7 @@
 
 
     function updateMoney() {
-      $("#money").text(money);
+      $("#money").html(money);
       localStorage.setItem("money", money);
       updateTreasures();
     }
@@ -188,7 +187,6 @@
         const numberOfUpgradesPurchased = upgrades.filter((id) => id === upgradeId).length;
         const totalCost = upgradeCost * (numberOfUpgradesPurchased + 1);
         const upgradeInfoSpan = $(this).find(".upgradeInfo");
-        upgradeInfoSpan.text(` (+$${upgradeAmount}/click = $${totalCost})`);
         if (money >= totalCost) {
           $(this).prop("disabled", false);
           $(this).addClass('btn-success');
@@ -196,6 +194,17 @@
           $(this).prop("disabled", true);
           $(this).removeClass('btn-success');
         }
+
+        if(upgradeId == 6 && numberOfUpgradesPurchased > 0){
+          upgradeInfoSpan.text(` (+$0/click = $1000)`);
+          $(this).prop("disabled", true);
+          $(this).addClass('btn-warning');
+          $(this).removeClass('btn-success');
+        }else{
+          upgradeInfoSpan.text(` (+$${upgradeAmount}/click = $${totalCost})`);
+        }
+
+
       });
     }
 
@@ -228,11 +237,14 @@
 
 
     function updateClickAmount() {
-      clickAmount = 1; // Reset clickAmount
+      //clickAmount = 1; // Reset clickAmount
       upgrades.forEach((upgradeId) => {
-        const upgradeButton = $(".upgradeButton[data-id='" + upgradeId + "']");
-        const amount = parseInt(upgradeButton.data("amount"));
-        clickAmount += amount; // Update clickAmount for each upgrade purchased
+        if(upgradeId !== 'autoClicker' && upgradeId !== 6){
+          const upgradeButton = $(".upgradeButton[data-id='" + upgradeId + "']");
+          const amount = parseInt(upgradeButton.data("amount"));
+          clickAmount += amount; // Update clickAmount for each upgrade purchased
+        }
+        
       });
 
       // Update the displayed clickAmount on the page
@@ -315,7 +327,7 @@
 
 
         <div class="col-md-4">
-          <button class="upgradeButton btn btn-secondary btn-block" data-id="6" data-amount="0" data-cost="1000" id="buyAutoClicker">
+          <button class="upgradeButton btn btn-secondary btn-block" data-id="6" data-amount="1" data-cost="1000" id="buyAutoClicker">
             Auto Clicker<span class="upgradeInfo"></span>
           </button>
         </div>
