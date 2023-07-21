@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Making Game</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
@@ -44,9 +44,85 @@
     let clickAmount = 1;
     let upgrades = JSON.parse(localStorage.getItem("upgrades")) || [];
 
+    let treasures = [
+      {
+        id: 1,
+        name: "Gem",
+        value: 50,
+        cost: 100,
+        purchased: false,
+        quantity: 0,
+      },
+      {
+        id: 2,
+        name: "Golden Coin",
+        value: 100,
+        cost: 500,
+        purchased: false,
+        quantity: 0,
+      },
+      {
+        id: 3,
+        name: "Diamond",
+        value: 200,
+        cost: 1000,
+        purchased: false,
+        quantity: 0,
+      },
+    ];
+
+
+    function updateTreasures() {
+      treasures.forEach((treasure) => {
+        const treasureButton = $(".treasureButton[data-id='" + treasure.id + "']");
+        const itemNameSpan = treasureButton.find(".itemName");
+        const itemCostSpan = treasureButton.find(".itemCost");
+        const itemQuantitySpan = treasureButton.find(".itemQuantity");
+
+        itemNameSpan.text(treasure.name);
+        itemCostSpan.text("$" + treasure.cost);
+        itemQuantitySpan.text(treasure.quantity);
+
+        // Update the button text to show the item name, cost, and quantity
+        treasureButton.text(
+          "Buy " + treasure.name + " (Qty: " + treasure.quantity + ") ($" + treasure.cost + ")"
+        );
+
+        // Apply different button styles based on affordability
+        if (money >= treasure.cost) {
+          treasureButton.prop("disabled", false);
+          treasureButton.removeClass("btn-secondary").addClass("btn-info");
+        } else {
+          treasureButton.prop("disabled", true);
+          treasureButton.removeClass("btn-info").addClass("btn-secondary");
+        }
+      });
+    }
+
+
+
+    function buyTreasure(treasureId) {
+      const treasure = treasures.find((t) => t.id === treasureId);
+      if (treasure && money >= treasure.cost) {
+        money -= treasure.cost;
+        treasure.quantity++;
+        updateMoney();
+        updateTreasures();
+
+        // Save the updated treasures array to local storage
+        localStorage.setItem("treasures", JSON.stringify(treasures));
+      }
+    }
+
+
+
+
+
+
     function updateMoney() {
       $("#money").text(money);
       localStorage.setItem("money", money);
+      updateTreasures();
     }
 
     function updateButtons() {
@@ -110,6 +186,8 @@
     
 
     $(document).ready(function() {
+      treasures = JSON.parse(localStorage.getItem("treasures")) || treasures;
+
       // localStorage.setItem("money", 547);
       // var test = localStorage.getItem("money");
       // $('#test').html(test);
@@ -133,6 +211,7 @@
       updateClickAmount(); // Calculate clickAmount based on purchased upgrades
       updateMoney();
       updateButtons();
+      updateTreasures();
     });
 
     // Save money and upgrades to local storage when the page is unloaded
@@ -186,6 +265,48 @@
       </div>
     </div>
     <!-- ... -->
+   <!-- ... -->
+  <div id="treasures" class="mt-5">
+    <h2>Treasures</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <button
+          class="treasureButton btn btn-info btn-block"
+          data-id="1"
+          onclick="buyTreasure(1)"
+        >
+          <span class="itemName">Gem</span>
+          <span class="itemCost">$100</span>
+          <span class="itemQuantity">0</span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button
+          class="treasureButton btn btn-info btn-block"
+          data-id="2"
+          onclick="buyTreasure(2)"
+        >
+          <span class="itemName">Golden Coin</span>
+          <span class="itemCost">$500</span>
+          <span class="itemQuantity">0</span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button
+          class="treasureButton btn btn-info btn-block"
+          data-id="3"
+          onclick="buyTreasure(3)"
+        >
+          <span class="itemName">Diamond</span>
+          <span class="itemCost">$1000</span>
+          <span class="itemQuantity">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ... -->
+  
+
 
   </div>
 </body>
