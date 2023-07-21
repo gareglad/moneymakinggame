@@ -44,6 +44,28 @@
     let clickAmount = 1;
     let upgrades = JSON.parse(localStorage.getItem("upgrades")) || [];
 
+
+
+    let autoClickerInterval; // Variable to store the interval for auto-clicking
+
+    function autoClick() {
+      work(); // Call the work function to increase money
+    }
+
+    function buyAutoClicker() {
+      const autoClickerCost = 1000; // Set the cost of the auto clicker
+      if (money >= autoClickerCost && !isUpgradePurchased("autoClicker")) {
+        money -= autoClickerCost;
+        upgrades.push("autoClicker");
+        updateMoney();
+        updateButtons();
+        localStorage.setItem("upgrades", JSON.stringify(upgrades));
+
+        // Start the auto-clicking interval once the upgrade is purchased
+        autoClickerInterval = setInterval(autoClick, 1000); // Auto-click every 1000 milliseconds (1 second)
+      }
+    }
+
     let treasures = [
       {
         id: 1,
@@ -210,6 +232,10 @@
       updateMoney();
       updateButtons();
 
+      $("#buyAutoClicker").click(function () {
+        buyAutoClicker();
+      });
+
       $("#workButton").click(function() {
         work();
       });
@@ -240,6 +266,10 @@
           alert('Reset canceled.');
         }
       });
+
+      if (isUpgradePurchased("autoClicker")) {
+        autoClickerInterval = setInterval(autoClick, 1000); // Auto-click every 1000 milliseconds (1 second)
+      }
 
 
 
@@ -298,6 +328,13 @@
       </div>
     </div>
     <!-- ... -->
+
+    <div class="col-md-4">
+      <button class="upgradeButton btn btn-secondary btn-block" data-id="6" data-amount="0" data-cost="1000" id="buyAutoClicker">
+        Auto Clicker<span class="upgradeInfo"></span>
+      </button>
+    </div>
+    
    <!-- ... -->
   <div id="treasures" class="mt-5">
     <h2>Treasures</h2>
