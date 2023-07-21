@@ -89,14 +89,15 @@
     }
 
     $(document).ready(function() {
-      localStorage.setItem("test", '101');
-      var test = localStorage.getItem("test");
-      $('#test').html(test);
+      // localStorage.setItem("money", 547);
+      // var test = localStorage.getItem("money");
+      // $('#test').html(test);
       updateMoney();
       updateButtons();
 
       $("#workButton").click(function() {
         work();
+        localStorage.setItem("money", money);
       });
 
       $(".upgradeButton").click(function() {
@@ -104,6 +105,8 @@
         const upgradeAmount = parseInt($(this).data("amount"));
         const upgradeCost = parseInt($(this).data("cost"));
         buyUpgrade(upgradeId, upgradeAmount, upgradeCost);
+
+        localStorage.setItem("upgrades", JSON.stringify(upgrades));
       });
 
       // Apply upgrades on page load
@@ -113,10 +116,10 @@
     });
 
     // Save money and upgrades to local storage when the page is unloaded
-    $(window).on("beforeunload", function() {
-      localStorage.setItem("money", money);
-      localStorage.setItem("upgrades", JSON.stringify(upgrades));
-    });
+    // $(window).on("beforeunload", function() {
+    //   localStorage.setItem("money", money);
+    //   localStorage.setItem("upgrades", JSON.stringify(upgrades));
+    // });
   </script>
 </head>
 <body>
@@ -126,7 +129,7 @@
   <p>test: <span id="test">404</span></p>
   <div id="upgrades">
     <h2>Upgrades</h2>
-    <button class="upgradeButton" data-id="1" data-amount="10" data-cost="50">Upgrade 1 (+$10/click - $50)</button>
+    <button class="upgradeButton" data-id="1" data-amount="10" data-cost="10">Upgrade 1 (+$10/click - $10)</button>
     <button class="upgradeButton" data-id="2" data-amount="20" data-cost="100">Upgrade 2 (+$20/click - $100)</button>
     <button class="upgradeButton" data-id="3" data-amount="50" data-cost="200">Upgrade 3 (+$50/click - $200)</button>
   </div>
