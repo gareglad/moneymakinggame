@@ -60,8 +60,10 @@
         upgradeInfoSpan.text(` (+$${upgradeAmount}/click = $${totalCost})`);
         if (money >= totalCost) {
           $(this).prop("disabled", false);
+          $(this).addClass('btn-success');
         } else {
           $(this).prop("disabled", true);
+          $(this).removeClass('btn-success');
         }
       });
     }
