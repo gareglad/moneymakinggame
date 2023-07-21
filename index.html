@@ -6,10 +6,10 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      /* font-family: Arial, sans-serif; */
       text-align: center;
     }
-    #money {
+    /* #money {
       font-size: 24px;
       font-weight: bold;
       color: green;
@@ -22,11 +22,20 @@
     .upgradeButton {
       margin: 10px;
     }
-    /* button {
+    button {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
     } */
+    #money {
+      /* font-size: 24px; */
+      font-weight: bold;
+      color: green;
+    }
+    #upgrades .col-md-4 {
+        margin-bottom: 10px;
+    }
+
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -37,6 +46,7 @@
 
     function updateMoney() {
       $("#money").text(money);
+      localStorage.setItem("money", money);
     }
 
     function updateButtons() {
@@ -69,6 +79,7 @@
         updateClickAmount(); // Update clickAmount when a new upgrade is purchased
         updateMoney();
         updateButtons();
+        localStorage.setItem("upgrades", JSON.stringify(upgrades));
       }
     }
 
@@ -90,7 +101,6 @@
 
       $("#workButton").click(function() {
         work();
-        localStorage.setItem("money", money);
       });
 
       $(".upgradeButton").click(function() {
@@ -99,7 +109,7 @@
         const upgradeCost = parseInt($(this).data("cost"));
         buyUpgrade(upgradeId, upgradeAmount, upgradeCost);
 
-        localStorage.setItem("upgrades", JSON.stringify(upgrades));
+        
       });
 
       // Apply upgrades on page load
@@ -120,7 +130,7 @@
   <div class="container mt-5">
     <h1>Money Making Game</h1>
     <p>Your Money: $<span id="money">0</span></p>
-    <button id="workButton" class="btn btn-primary">Work</button>
+    <div id="workButton" class="btn btn-primary">Work</div>
     <div id="upgrades" class="mt-5">
       <h2>Upgrades</h2>
       <div class="row justify-content-center">
