@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Money Making Game</title>
   <style>
     body {
@@ -20,6 +21,20 @@
     .upgradeButton {
       margin: 10px;
     }
+
+    /* Media Query for Mobile Devices */
+    @media screen and (max-width: 480px) {
+      h1 {
+        font-size: 24px;
+      }
+      #money {
+        font-size: 20px;
+      }
+      #workButton, .upgradeButton {
+        font-size: 14px;
+        padding: 8px 15px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -28,15 +43,16 @@
   <button id="workButton">Work</button>
   <div id="upgrades">
     <h2>Upgrades</h2>
-    <button class="upgradeButton" data-amount="10" data-cost="50">Upgrade 1 (+$10/click - $50)</button>
-    <button class="upgradeButton" data-amount="20" data-cost="100">Upgrade 2 (+$20/click - $100)</button>
-    <button class="upgradeButton" data-amount="50" data-cost="200">Upgrade 3 (+$50/click - $200)</button>
+    <button class="upgradeButton" data-id="1" data-amount="10" data-cost="50">Upgrade 1 (+$10/click - $50)</button>
+    <button class="upgradeButton" data-id="2" data-amount="20" data-cost="100">Upgrade 2 (+$20/click - $100)</button>
+    <button class="upgradeButton" data-id="3" data-amount="50" data-cost="200">Upgrade 3 (+$50/click - $200)</button>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    let money = 0;
+    let money = parseInt(localStorage.getItem("money")) || 0;
     let clickAmount = 1;
+    let upgrades = JSON.parse(localStorage.getItem("upgrades")) || [];
 
     function updateMoney() {
       $("#money").text(money);
@@ -44,9 +60,10 @@
 
     function updateButtons() {
       $(".upgradeButton").each(function() {
+        const upgradeId = $(this).data("id");
         const upgradeAmount = parseInt($(this).data("amount"));
         const upgradeCost = parseInt($(this).data("cost"));
-        if (money >= upgradeCost) {
+        if (money >= upgradeCost && !isUpgradePurchased(upgradeId)) {
           $(this).prop("disabled", false);
         } else {
           $(this).prop("disabled", true);
@@ -60,13 +77,27 @@
       updateButtons();
     }
 
-    function buyUpgrade(amount, cost) {
-      if (money >= cost) {
+    function isUpgradePurchased(upgradeId) {
+      return upgrades.includes(upgradeId);
+    }
+
+    function buyUpgrade(upgradeId, amount, cost) {
+      if (money >= cost && !isUpgradePurchased(upgradeId)) {
         money -= cost;
-        clickAmount += amount;
+        upgrades.push(upgradeId);
+        updateClickAmount(); // Update clickAmount when a new upgrade is purchased
         updateMoney();
         updateButtons();
       }
+    }
+
+    function updateClickAmount() {
+      clickAmount = 1; // Reset clickAmount
+      upgrades.forEach((upgradeId) => {
+        const upgradeButton = $(".upgradeButton[data-id='" + upgradeId + "']");
+        const amount = parseInt(upgradeButton.data("amount"));
+        clickAmount += amount; // Update clickAmount for each upgrade purchased
+      });
     }
 
     $(document).ready(function() {
@@ -78,10 +109,22 @@
       });
 
       $(".upgradeButton").click(function() {
+        const upgradeId = $(this).data("id");
         const upgradeAmount = parseInt($(this).data("amount"));
         const upgradeCost = parseInt($(this).data("cost"));
-        buyUpgrade(upgradeAmount, upgradeCost);
+        buyUpgrade(upgradeId, upgradeAmount, upgradeCost);
       });
+
+      // Apply upgrades on page load
+      updateClickAmount(); // Calculate clickAmount based on purchased upgrades
+      updateMoney();
+      updateButtons();
+    });
+
+    // Save money and upgrades to local storage when the page is unloaded
+    $(window).on("beforeunload", function() {
+      localStorage.setItem("money", money);
+      localStorage.setItem("upgrades", JSON.stringify(upgrades));
     });
   </script>
 </body>
