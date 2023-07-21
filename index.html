@@ -50,17 +50,25 @@
     }
 
     function updateButtons() {
-      $(".upgradeButton").each(function() {
+      $(".upgradeButton").each(function () {
         const upgradeId = $(this).data("id");
         const upgradeAmount = parseInt($(this).data("amount"));
         const upgradeCost = parseInt($(this).data("cost"));
-        if (money >= upgradeCost && !isUpgradePurchased(upgradeId)) {
+        const numberOfUpgradesPurchased = upgrades.filter((id) => id === upgradeId).length;
+        const totalCost = upgradeCost * (numberOfUpgradesPurchased + 1);
+        const upgradeInfoSpan = $(this).find(".upgradeInfo");
+        upgradeInfoSpan.text(` (+$${upgradeAmount}/click = $${totalCost})`);
+        if (money >= totalCost) {
           $(this).prop("disabled", false);
         } else {
           $(this).prop("disabled", true);
         }
       });
     }
+
+    // ...
+
+
 
     function work() {
       money += clickAmount;
@@ -73,8 +81,10 @@
     }
 
     function buyUpgrade(upgradeId, amount, cost) {
-      if (money >= cost && !isUpgradePurchased(upgradeId)) {
-        money -= cost;
+      const numberOfUpgradesPurchased = upgrades.filter((id) => id === upgradeId).length;
+      const totalCost = cost * (numberOfUpgradesPurchased + 1); // Calculate the total cost based on the number of upgrades purchased
+      if (money >= totalCost) {
+        money -= totalCost;
         upgrades.push(upgradeId);
         updateClickAmount(); // Update clickAmount when a new upgrade is purchased
         updateMoney();
@@ -82,6 +92,7 @@
         localStorage.setItem("upgrades", JSON.stringify(upgrades));
       }
     }
+
 
     function updateClickAmount() {
       clickAmount = 1; // Reset clickAmount
@@ -130,21 +141,33 @@
   <div class="container mt-5">
     <h1>Money Making Game</h1>
     <p>Your Money: $<span id="money">0</span></p>
-    <div id="workButton" class="btn btn-primary">Work</div>
+    <button id="workButton" class="btn btn-primary">Work</button>
+    <!-- ... -->
     <div id="upgrades" class="mt-5">
       <h2>Upgrades</h2>
       <div class="row justify-content-center">
         <div class="col-md-4">
-          <button class="upgradeButton btn btn-secondary btn-block" data-id="1" data-amount="10" data-cost="10">Upgrade 1 (+$10/click - $10)</button>
+          <button class="upgradeButton btn btn-secondary btn-block" data-id="1" data-amount="10" data-cost="10">
+            Upgrade 1 
+            <span class="upgradeInfo"></span>
+          </button>
         </div>
         <div class="col-md-4">
-          <button class="upgradeButton btn btn-secondary btn-block" data-id="2" data-amount="20" data-cost="100">Upgrade 2 (+$20/click - $100)</button>
+          <button class="upgradeButton btn btn-secondary btn-block" data-id="2" data-amount="20" data-cost="100">
+            Upgrade 2 
+            <span class="upgradeInfo"></span>
+          </button>
         </div>
         <div class="col-md-4">
-          <button class="upgradeButton btn btn-secondary btn-block" data-id="3" data-amount="50" data-cost="200">Upgrade 3 (+$50/click - $200)</button>
+          <button class="upgradeButton btn btn-secondary btn-block" data-id="3" data-amount="50" data-cost="200">
+            Upgrade 3 
+            <span class="upgradeInfo"></span>
+          </button>
         </div>
       </div>
     </div>
+    <!-- ... -->
+
   </div>
 </body>
 </html>
