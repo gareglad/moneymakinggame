@@ -8,6 +8,7 @@
     body {
       /* font-family: Arial, sans-serif; */
       text-align: center;
+      touch-action: manipulation;
     }
     /* #money {
       font-size: 24px;
@@ -31,9 +32,9 @@
     .col-md-4 {
         margin-bottom: 10px;
     }
-    .disable-dbl-tap-zoom, button {
+    /* .disable-dbl-tap-zoom, button {
       touch-action: manipulation;
-    }
+    } */
 
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -227,6 +228,21 @@
       updateMoney();
       updateButtons();
       updateTreasures();
+
+
+      $('#reset').on('click', function() {
+        // Display a confirmation dialog
+        if (confirm('Are you sure you want to reset your money?')) {
+          localStorage.clear();
+          alert('Money has been cleared!');
+          location.reload();
+        } else {
+          alert('Reset canceled.');
+        }
+      });
+
+
+
     });
 
     // Save money and upgrades to local storage when the page is unloaded
@@ -345,6 +361,7 @@
   </div>
   <!-- ... -->
   
+  <button id="reset" class="btn btn-danger">Reset</button> 
 
 
   </div>
