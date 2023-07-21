@@ -89,6 +89,9 @@
     }
 
     $(document).ready(function() {
+      localStorage.setItem("test", '101');
+      var test = localStorage.getItem("test");
+      $('#test').html(test);
       updateMoney();
       updateButtons();
 
@@ -120,6 +123,7 @@
   <h1>Money Making Game</h1>
   <p>Your Money: $<span id="money">0</span></p>
   <button id="workButton">Work</button>
+  <p>test: <span id="test">404</span></p>
   <div id="upgrades">
     <h2>Upgrades</h2>
     <button class="upgradeButton" data-id="1" data-amount="10" data-cost="50">Upgrade 1 (+$10/click - $50)</button>
