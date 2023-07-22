@@ -237,11 +237,15 @@
 
 
     function updateClickAmount() {
-      //clickAmount = 1; // Reset clickAmount
+      console.log('g');
+
+      clickAmount = 1; // Reset clickAmount
       upgrades.forEach((upgradeId) => {
         if(upgradeId !== 'autoClicker' && upgradeId !== 6){
           const upgradeButton = $(".upgradeButton[data-id='" + upgradeId + "']");
           const amount = parseInt(upgradeButton.data("amount"));
+
+
           clickAmount += amount; // Update clickAmount for each upgrade purchased
         }
         
@@ -327,7 +331,7 @@
 
 
         <div class="col-md-4">
-          <button class="upgradeButton btn btn-secondary btn-block" data-id="6" data-amount="1" data-cost="1000" id="buyAutoClicker">
+          <button class="upgradeButton btn btn-secondary btn-block" data-id="6" data-amount="0" data-cost="1000" id="buyAutoClicker">
             Auto Clicker<span class="upgradeInfo"></span>
           </button>
         </div>
